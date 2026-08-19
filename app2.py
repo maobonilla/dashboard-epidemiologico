@@ -21,6 +21,8 @@ if archivo_cargado is not None:
 
     # Agregar columna VALOR con el número 1 en cada fila
     df['VALOR'] = 1
+    # Reemplazar todos los valores que empiecen con "DIABETES MELL" por "DIABETES MELLITUS"
+    df.loc[df['DescripcionDX'].str.startswith('DIABETES MELL', na=False), 'DescripcionDX'] = 'DIABETES MELLITUS'
 
     # Asegurar que FechaDiagnostico tenga el formato de fecha correcto
     if 'FechaDiagnostico' in df.columns:
