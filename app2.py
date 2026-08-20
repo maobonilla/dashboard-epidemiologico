@@ -4,11 +4,11 @@ import plotly.express as px
 import openpyxl
 
 # 1. Configuración principal de la página
-st.set_page_config(page_title="Dashboard VE01", layout="wide", page_icon="📊")
-st.title("Dashboard VE01 🩺")
+st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
+st.title("Informe Eventos VE01 🩺")
 
 # 2. Carga del archivo XLSX
-archivo_cargado = st.file_uploader("Cargar archivo Excel (.xlsx)", type=["xlsx"])
+archivo_cargado = st.file_uploader("Cargar archivo Excel de los Eventos VE01 (.xlsx)", type=["xlsx"])
 
 if archivo_cargado is not None:
     # Leer el archivo
