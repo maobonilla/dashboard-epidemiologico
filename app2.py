@@ -56,7 +56,36 @@ if archivo_cargado is not None:
 
         st.markdown("---")
 
-        # --- CURVA EPIDEMIOLÓGICA ---
+        # --- CURVA EPIDEMIOLÓGICA POR SEMANA ---
+
+        st.subheader("Curva Epidemiológica (por Semana)")
+        
+        # Crear columna de semana epidemiológica
+        df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
+        df_filtrado['Año'] = df_filtrado['FechaDiagnostico'].dt.year
+        
+        # Agrupar por año y semana, sumar casos
+        curva_df = df_filtrado.groupby(['Año','SemanaEpi'])['VALOR'].sum().reset_index()
+        
+        # Crear columna combinada para el eje X
+        curva_df['Semana'] = curva_df['Año'].astype(str) + "-SE" + curva_df['SemanaEpi'].astype(str)
+        
+        # Orden cronológico
+        curva_df = curva_df.sort_values(['Año','SemanaEpi'], ascending=True)
+        
+        # Gráfico
+        fig_curva = px.bar(
+            curva_df, 
+            x='Semana', 
+            y='VALOR',
+            labels={'Semana':'Semana Epidemiológica','VALOR':'Número de Casos'},
+            color_discrete_sequence=['#ff4b4b']
+        )
+        
+        st.plotly_chart(fig_curva, use_container_width=True)
+        st.markdown("---")
+        
+        '''# --- CURVA EPIDEMIOLÓGICA ---
         st.subheader("Curva Epidemiológica")
         # Agrupar por fecha y sumar casos
         curva_df = df_filtrado.groupby('FechaDiagnostico')['VALOR'].sum().reset_index()
@@ -70,7 +99,8 @@ if archivo_cargado is not None:
         #fig_curva.update_traces(fill='tozeroy')
         st.plotly_chart(fig_curva, width="stretch")
 
-        st.markdown("---")
+        st.markdown("---")'''
+
 
         # --- DISTRIBUCIÓN POR SEXO Y CENTRO DE SALUD ---
         colA, colB = st.columns(2)
