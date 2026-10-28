@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import openpyxl
-import datetime 
+import datetime as dt 
 
 # 1. Configuración principal de la página
 st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
