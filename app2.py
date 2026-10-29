@@ -150,6 +150,21 @@ if archivo_cargado is not None:
                          color_discrete_sequence=['#FFA15A'])
         st.plotly_chart(fig_dia, use_container_width=True)
 
+        # --- Construcción del HTML completo ---
+        html_parts = []
+
+        # Encabezado y métricas
+        html_parts.append(f"""
+        <h1>Informe Eventos VE01</h1>
+        <h2>Resumen Epidemiológico</h2>
+        <ul>
+            <li>Total de Casos: {total_casos:,}</li>
+            <li>Edad Promedio: {edad_prom:.1f} años</li>
+            <li>Total Centros Involucrados: {centros}</li>
+            <li>Último Caso Registrado: {ultimo_caso}</li>
+        </ul>
+        """)
+
         # Gráficos convertidos a HTML
         html_parts.append(fig_curva.to_html(full_html=False, include_plotlyjs='cdn'))
         html_parts.append(fig_sexo.to_html(full_html=False, include_plotlyjs=False))
