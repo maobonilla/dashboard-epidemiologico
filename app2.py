@@ -60,6 +60,8 @@ if archivo_cargado is not None:
         # --- CURVA EPIDEMIOLÓGICA POR SEMANA ---
 
         st.subheader("Curva Epidemiológica (por Semana)")
+
+        df_filtrado['FechaDiagnostico'] = pd.to_datetime(df_filtrado['FechaDiagnostico'], errors='coerce')
         
         # Crear columna de semana epidemiológica
         df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
