@@ -154,6 +154,7 @@ if archivo_cargado is not None:
         total_casos = df_filtrado['VALOR'].sum()
         edad_prom = df_filtrado['Años'].mean()
         centros = df_filtrado['CentroSalud'].nunique
+        ultimo_caso = str(df_filtrado['FechaDiagnostico'].max())
         html_parts = []
 
         # Encabezado y métricas
