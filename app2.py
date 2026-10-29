@@ -88,23 +88,6 @@ if archivo_cargado is not None:
         st.plotly_chart(fig_curva, use_container_width=True)
         st.markdown("---")
         
-        '''# --- CURVA EPIDEMIOLÓGICA ---
-        st.subheader("Curva Epidemiológica")
-        # Agrupar por fecha y sumar casos
-        curva_df = df_filtrado.groupby('FechaDiagnostico')['VALOR'].sum().reset_index()
-        # Orden cronológico ascendente
-        curva_df = curva_df.sort_values('FechaDiagnostico', ascending=True)
-
-        fig_curva = px.histogram(curva_df, x='FechaDiagnostico', y='VALOR',
-                            labels={'FechaDiagnostico': 'Fecha de Diagnóstico', 'VALOR': 'Número de Casos'},
-                            color_discrete_sequence=['#ff4b4b'])
-        # Llenar el área bajo la curva para un look más profesional
-        #fig_curva.update_traces(fill='tozeroy')
-        st.plotly_chart(fig_curva, width="stretch")
-
-        st.markdown("---")'''
-
-
         # --- DISTRIBUCIÓN POR SEXO Y CENTRO DE SALUD ---
         colA, colB = st.columns(2)
 
