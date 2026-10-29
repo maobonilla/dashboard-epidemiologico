@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import openpyxl
 import datetime as dt 
+import io
 
 # 1. Configuración principal de la página
 st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
@@ -148,6 +149,21 @@ if archivo_cargado is not None:
                          labels={'DiaSemana': 'Día de la Semana', 'VALOR': 'Cantidad de Casos'},
                          color_discrete_sequence=['#FFA15A'])
         st.plotly_chart(fig_dia, use_container_width=True)
+
+        # --- BOTÓN DE DESCARGA HTML ---
+        st.markdown("---")
+        st.subheader("Descargar Informe Interactivo")
+
+        # Convertir el gráfico a HTML
+        html_buffer = io.StringIO()
+        html_buffer.write(fig_curva.to_html(full_html=True, include_plotlyjs='cdn'))
+
+        st.download_button(
+            label="📥 Descargar Curva Epidemiológica en HTML",
+            data=html_buffer.getvalue(),
+            file_name="curva_epidemiologica.html",
+            mime="text/html"        
+    
 
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
