@@ -163,6 +163,7 @@ if archivo_cargado is not None:
             data=html_buffer.getvalue(),
             file_name="curva_epidemiologica.html",
             mime="text/html"        
+        )
     
 
     else:
