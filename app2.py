@@ -150,9 +150,11 @@ if archivo_cargado is not None:
                          color_discrete_sequence=['#FFA15A'])
         st.plotly_chart(fig_dia, use_container_width=True)
 
-        st.subheader("Descargar Informe Completo en HTML")
+        # Gráficos convertidos a HTML
+        html_parts.append(fig_curva.to_html(full_html=False, include_plotlyjs='cdn'))
+        html_parts.append(fig_sexo.to_html(full_html=False, include_plotlyjs=False))
 
-        # Concatenar todo
+        # Concatenar todo (ahora sí son solo strings)
         full_html = "<html><head><meta charset='utf-8'></head><body>" + "".join(html_parts) + "</body></html>"
 
         # Botón de descarga
@@ -161,7 +163,7 @@ if archivo_cargado is not None:
             data=full_html,
             file_name="informe_eventos_VE01.html",
             mime="text/html"
-        )   
+        )
 
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
