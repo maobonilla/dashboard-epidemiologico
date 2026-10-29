@@ -151,7 +151,9 @@ if archivo_cargado is not None:
         st.plotly_chart(fig_dia, use_container_width=True)
 
         # --- Construcción del HTML completo ---
-        total_casos =df_filtrado['VALOR'].sum()
+        total_casos = df_filtrado['VALOR'].sum()
+        edad_prom = df_filtrado['Años'].mean()
+        centros = df_filtrado['CentroSalud'].nunique
         html_parts = []
 
         # Encabezado y métricas
