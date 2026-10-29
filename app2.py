@@ -151,6 +151,7 @@ if archivo_cargado is not None:
         st.plotly_chart(fig_dia, use_container_width=True)
 
         # --- Construcción del HTML completo ---
+        total_casos =df_filtrado['VALOR'].sum()
         html_parts = []
 
         # Encabezado y métricas
