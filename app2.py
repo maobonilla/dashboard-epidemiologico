@@ -150,21 +150,19 @@ if archivo_cargado is not None:
                          color_discrete_sequence=['#FFA15A'])
         st.plotly_chart(fig_dia, use_container_width=True)
 
-        # --- BOTÓN DE DESCARGA HTML ---
-        st.markdown("---")
-        st.subheader("Descargar Informe Interactivo")
+        st.subheader("Descargar Informe Completo en HTML")
 
-        # Convertir el gráfico a HTML
-        html_buffer = io.StringIO()
-        html_buffer.write(fig_curva.to_html(full_html=True, include_plotlyjs='cdn'))
-
-        st.download_button(
-            label="📥 Descargar Curva Epidemiológica en HTML",
-            data=html_buffer.getvalue(),
-            file_name="curva_epidemiologica.html",
-            mime="text/html"        
-        )
-    
+        # Usamos st.experimental_get_page_html() para capturar la página
+        try:
+            html_content = st.experimental_get_page_html()
+            st.download_button(
+                label="📥 Descargar Informe Completo en HTML",
+                data=html_content,
+                file_name="informe_eventos_VE01.html",
+                mime="text/html"
+            )
+        except Exception as e:
+            st.error(f"No se pudo generar el HTML: {e}")    
 
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
