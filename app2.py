@@ -161,6 +161,8 @@ if archivo_cargado is not None:
         html_parts.append(f"""
         <h1>Informe Eventos VE01</h1>
         <h2>Resumen Epidemiológico</h2>
+        <h2>df_filtrado = df[df['DescripcionDX'] == evento_seleccionado]</h2>
+        
         <ul>
             <li>Total de Casos: {total_casos:,}</li>
             <li>Edad Promedio: {edad_prom:.1f} años</li>
