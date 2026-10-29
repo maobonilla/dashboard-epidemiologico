@@ -155,15 +155,17 @@ if archivo_cargado is not None:
         edad_prom = df_filtrado['Años'].mean()
         centros = df_filtrado['CentroSalud'].nunique
         ultimo_caso = str(df_filtrado['FechaDiagnostico'].max())
+        df_filtrado = df[df['DescripcionDX'] == evento_seleccionado]
         html_parts = []
-
+        
         # Encabezado y métricas
         html_parts.append(f"""
         <h1>Informe Eventos VE01</h1>
         <h2>Resumen Epidemiológico</h2>
-        <h2>df_filtrado = df[df['DescripcionDX'] == evento_seleccionado]</h2>
+       
         
         <ul>
+            <li>Evento: {df_filtrado:,}</li>
             <li>Total de Casos: {total_casos:,}</li>
             <li>Edad Promedio: {edad_prom:.1f} años</li>
             <li>Total Centros Involucrados: {centros}</li>
