@@ -152,17 +152,16 @@ if archivo_cargado is not None:
 
         st.subheader("Descargar Informe Completo en HTML")
 
-        # Usamos st.experimental_get_page_html() para capturar la página
-        try:
-            html_content = st.experimental_get_page_html()
-            st.download_button(
-                label="📥 Descargar Informe Completo en HTML",
-                data=html_content,
-                file_name="informe_eventos_VE01.html",
-                mime="text/html"
-            )
-        except Exception as e:
-            st.error(f"No se pudo generar el HTML: {e}")    
+        # Concatenar todo
+        full_html = "<html><head><meta charset='utf-8'></head><body>" + "".join(html_parts) + "</body></html>"
+
+        # Botón de descarga
+        st.download_button(
+            label="📥 Descargar Informe Completo en HTML",
+            data=full_html,
+            file_name="informe_eventos_VE01.html",
+            mime="text/html"
+        )   
 
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
