@@ -190,8 +190,8 @@ with tab1:
             mime="text/html")    
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
-else:
-st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
+    else:
+    st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
 
 with tab2: 
     st.header("Canal Endémico 📈")
