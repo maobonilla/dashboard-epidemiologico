@@ -156,7 +156,7 @@ if archivo_cargado is not None:
         centros = df_filtrado['CentroSalud'].nunique
         ultimo_caso = str(df_filtrado['FechaDiagnostico'].max())
         df_filtrado = df[df['DescripcionDX'] == evento_seleccionado]
-        df_filtrado = df_filtrado.nunique
+        df_filtrado = str(df_filtrado.nunique)
         
         html_parts = []
         
