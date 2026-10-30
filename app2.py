@@ -189,10 +189,10 @@ with tab1:
             file_name="informe_eventos_VE01.html",
             mime="text/html"
         )    
-        else:
-            st.warning("No hay datos disponibles para el filtro seleccionado.")
     else:
-    st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
+        st.warning("No hay datos disponibles para el filtro seleccionado.")
+else:
+st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
 with tab2: 
     st.header("Canal Endémico 📈")
     st.info("Aquí se mostrará la información del canal endémico.")
