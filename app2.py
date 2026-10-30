@@ -5,7 +5,7 @@ import openpyxl
 import datetime as dt 
 import io
 
-tab1, tab2 = st.tabs(["Informe VE01", "Canal Endémico")
+tab1, tab2 = st.tabs(["Informe VE01", "Canal Endémico"])
 with tab1:        
     # 1. Configuración principal de la página
     st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
