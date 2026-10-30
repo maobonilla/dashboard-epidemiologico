@@ -5,48 +5,50 @@ import openpyxl
 import datetime as dt 
 import io
 
-# 1. Configuración principal de la página
-st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
-st.title("Informe Eventos VE01 🩺")
-
-# 2. Carga del archivo XLSX
-archivo_cargado = st.file_uploader("Cargar archivo Excel de los Eventos VE01 (.xlsx)", type=["xlsx"])
-
-if archivo_cargado is not None:
+tab1, tab2 = st.tabs(["Informe VE01", "Canal Endémico")
+with tab1:        
+    # 1. Configuración principal de la página
+    st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
+    st.title("Informe Eventos VE01 🩺")
+    
+    # 2. Carga del archivo XLSX
+    archivo_cargado = st.file_uploader("Cargar archivo Excel de los Eventos VE01 (.xlsx)", type=["xlsx"])
+    
+    if archivo_cargado is not None:
     # Leer el archivo
     df = pd.read_excel(archivo_cargado)
-
+    
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
     if 'CentroSalud' in df.columns:
         df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
-
+    
     # Agregar columna VALOR con el número 1 en cada fila
     df['VALOR'] = 1
     # Reemplazar todos los valores que empiecen con "DIABETES MELL" por "DIABETES MELLITUS"
     df.loc[df['DescripcionDX'].str.startswith('DIABETES MELL', na=False), 'DescripcionDX'] = 'DIABETES MELLITUS'
-
+    
     # Asegurar que FechaDiagnostico tenga el formato de fecha correcto
     if 'FechaDiagnostico' in df.columns:
         df['FechaDiagnostico'] = pd.to_datetime(df['FechaDiagnostico']).dt.date
-
+    
     # 4. Filtro interactivo en la barra lateral
     st.sidebar.header("Opciones de Filtro")
     lista_diagnosticos = df['DescripcionDX'].dropna().unique().tolist()
     lista_diagnosticos.sort()
-
+    
     # Casilla desplegable para seleccionar el evento
     evento_seleccionado = st.sidebar.selectbox(
         "Seleccione el tipo de evento (Diagnóstico):",
         options=["Todos los eventos"] + lista_diagnosticos
     )
-
+    
     # Aplicar el filtro al DataFrame
     if evento_seleccionado != "Todos los eventos":
         df_filtrado = df[df['DescripcionDX'] == evento_seleccionado]
     else:
         df_filtrado = df
-
+    
     if not df_filtrado.empty:
         # --- TARJETAS DE MÉTRICAS (Análisis Adicional Recomendado) ---
         st.markdown("### Resumen Epidemiológico")
@@ -55,13 +57,13 @@ if archivo_cargado is not None:
         col2.metric("Edad Promedio", f"{df_filtrado['Años'].mean():.1f} años")
         col3.metric("Total Centros Involucrados", df_filtrado['CentroSalud'].nunique())
         col4.metric("Último Caso Registrado", str(df_filtrado['FechaDiagnostico'].max()))
-
+    
         st.markdown("---")
-
+    
         # --- CURVA EPIDEMIOLÓGICA POR SEMANA ---
-
+    
         st.subheader("Curva Epidemiológica (por Semana)")
-
+    
         df_filtrado['FechaDiagnostico'] = pd.to_datetime(df_filtrado['FechaDiagnostico'], errors='coerce')
         
         # Crear columna de semana epidemiológica
@@ -91,7 +93,7 @@ if archivo_cargado is not None:
         
         # --- DISTRIBUCIÓN POR SEXO Y CENTRO DE SALUD ---
         colA, colB = st.columns(2)
-
+    
         with colA:
             st.subheader("Distribución por Sexo")
             sexo_df = df_filtrado.groupby('Sexo')['VALOR'].sum().reset_index()
@@ -100,7 +102,7 @@ if archivo_cargado is not None:
             fig_sexo = px.pie(sexo_df, names='Sexo', values='VALOR', hole=0.4,
                               color='Sexo', color_discrete_map=colores_sexo)
             st.plotly_chart(fig_sexo, use_container_width=True)
-
+    
         with colB:
             st.subheader("Casos por Centro de Salud")
             centro_df = df_filtrado.groupby('CentroSalud')['VALOR'].sum().reset_index()
@@ -110,20 +112,20 @@ if archivo_cargado is not None:
                                 labels={'VALOR': 'Total de Casos', 'CentroSalud': 'Centro de Salud'},
                                 color_discrete_sequence=['#00CC96'])
             st.plotly_chart(fig_centro, use_container_width=True)
-
+    
         st.markdown("---")
-
+    
         # --- ANÁLISIS DE EDAD Y DISTRIBUCIÓN ---
         st.subheader("Análisis y Distribución de la Edad")
         colC, colD = st.columns(2)
-
+    
         with colC:
             # Gráfico de violín/boxplot (Recomendado para ver la distribución y promedios)
             fig_edad_box = px.box(df_filtrado, x='Sexo', y='Años', color='Sexo',
                                   color_discrete_map=colores_sexo,
                                   title="Dispersión y Promedios de Edad según Sexo")
             st.plotly_chart(fig_edad_box, use_container_width=True)
-
+    
         with colD:
             # Histograma para ver los picos de edades (Recomendado para epidemiología)
             fig_edad_hist = px.histogram(df_filtrado, x='Años', color='Sexo', barmode='overlay',
@@ -131,25 +133,25 @@ if archivo_cargado is not None:
                                          title="Histograma de Grupos Etarios",
                                          labels={'Años': 'Edad'})
             st.plotly_chart(fig_edad_hist, use_container_width=True)
-
+    
         # --- ANÁLISIS ADICIONAL: CASOS POR DÍA DE LA SEMANA ---
         st.markdown("---")
         st.subheader("💡 Análisis Adicional: Patrones de Consulta Semanal")
         st.info("Este gráfico ayuda a identificar los días de mayor afluencia en los centros de salud.")
-
+    
         # Obtener el día de la semana y traducirlo
         dias_map = {0: 'Lunes', 1: 'Martes', 2: 'Miércoles', 3: 'Jueves', 4: 'Viernes', 5: 'Sábado', 6: 'Domingo'}
         df_filtrado['DiaSemana_Num'] = pd.to_datetime(df_filtrado['FechaDiagnostico']).dt.dayofweek
         df_filtrado['DiaSemana'] = df_filtrado['DiaSemana_Num'].map(dias_map)
-
+    
         dia_df = df_filtrado.groupby(['DiaSemana_Num', 'DiaSemana'])['VALOR'].sum().reset_index()
         dia_df = dia_df.sort_values('DiaSemana_Num')
-
+    
         fig_dia = px.bar(dia_df, x='DiaSemana', y='VALOR',
                          labels={'DiaSemana': 'Día de la Semana', 'VALOR': 'Cantidad de Casos'},
                          color_discrete_sequence=['#FFA15A'])
         st.plotly_chart(fig_dia, use_container_width=True)
-
+    
         # --- Construcción del HTML completo ---
         total_casos = df_filtrado['VALOR'].sum()
         edad_prom = df_filtrado['Años'].mean()
@@ -172,14 +174,14 @@ if archivo_cargado is not None:
             <li>Último Caso Registrado: {ultimo_caso}</li>
         </ul>
         """)
-
+    
         # Gráficos convertidos a HTML
         html_parts.append(fig_curva.to_html(full_html=False, include_plotlyjs='cdn'))
         html_parts.append(fig_sexo.to_html(full_html=False, include_plotlyjs=False))
-
+    
         # Concatenar todo (ahora sí son solo strings)
         full_html = "<html><head><meta charset='utf-8'></head><body>" + "".join(html_parts) + "</body></html>"
-
+    
         # Botón de descarga
         st.download_button(
             label="📥 Descargar Informe Completo en HTML",
@@ -187,8 +189,30 @@ if archivo_cargado is not None:
             file_name="informe_eventos_VE01.html",
             mime="text/html"
         )
-
+    
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
-else:
+    else:
     st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
+with tab2: 
+    st.header("Canal Endémico 📈")
+    st.info("Aquí se mostrará la información del canal endémico.")
+
+    # Ejemplo: gráfico simulado de canal endémico
+    import numpy as np
+    semanas = list(range(1, 53))
+    casos_observados = np.random.randint(5, 20, size=52)
+    canal_min = np.random.randint(3, 10, size=52)
+    canal_max = canal_min + np.random.randint(5, 15, size=52)
+
+    canal_df = pd.DataFrame({
+        "Semana": semanas,
+        "Casos Observados": casos_observados,
+        "Canal Min": canal_min,
+        "Canal Max": canal_max
+    })
+
+    fig_canal = px.line(canal_df, x="Semana", y=["Casos Observados", "Canal Min", "Canal Max"],
+                        labels={"value":"Número de Casos","Semana":"Semana Epidemiológica"},
+                        title="Canal Endémico")
+    st.plotly_chart(fig_canal, use_container_width=True)
