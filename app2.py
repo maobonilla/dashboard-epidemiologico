@@ -14,9 +14,9 @@ with tab1:
     # 2. Carga del archivo XLSX
     archivo_cargado = st.file_uploader("Cargar archivo Excel de los Eventos VE01 (.xlsx)", type=["xlsx"])
     
-    if archivo_cargado is not None:
-        # Leer el archivo
-        df = pd.read_excel(archivo_cargado)
+if archivo_cargado is not None:
+    # Leer el archivo
+    df = pd.read_excel(archivo_cargado)
     
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
@@ -190,7 +190,7 @@ with tab1:
             mime="text/html")    
     else:
         st.warning("No hay datos disponibles para el filtro seleccionado.")
-    else:
+else:
     st.info("Por favor, carga un archivo Excel en el menú superior para comenzar.")
 
 with tab2: 
