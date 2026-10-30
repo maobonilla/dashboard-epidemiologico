@@ -15,8 +15,8 @@ with tab1:
     archivo_cargado = st.file_uploader("Cargar archivo Excel de los Eventos VE01 (.xlsx)", type=["xlsx"])
     
     if archivo_cargado is not None:
-    # Leer el archivo
-    df = pd.read_excel(archivo_cargado)
+        # Leer el archivo
+        df = pd.read_excel(archivo_cargado)
     
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
