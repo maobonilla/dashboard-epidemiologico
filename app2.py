@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import openpyxl
 import datetime as dt 
 import io
 
-tab1, tab2 = st.tabs(["Informe VE01", "Canal Endémico"])
+tab1, tab2 tab3 = st.tabs(["Informe VE01", "Canal Endémico", ""Canal Endémico IVRS])
 with tab1:        
     # 1. Configuración principal de la página
     st.set_page_config(page_title="Informe Eventos VE01", layout="wide", page_icon="📊")
@@ -215,3 +216,60 @@ with tab2:
                         labels={"value":"Número de Casos","Semana":"Semana Epidemiológica"},
                         title="Canal Endémico")
     st.plotly_chart(fig_canal, use_container_width=True)
+    
+with tab3: 
+    # --- Datos fijos para canal endémico ---
+    zona_exito = [130.66,121.37,82.00,47.76,110.85,61.26,34.82,115.59,163.89,142.46,
+    122.52,96.34,74.74,96.61,123.79,95.65,131.47,131.65,107.12,150.18,143.41,
+    146.76,138.27,197.43,156.94,161.55,200.01,254.39,180.98,127.78,100.66,
+    79.94,121.14,145.37,101.26,133.35,150.75,171.56,149.43,161.02,165.67,
+    195.43,156.17,154.57,128.10,119.88,142.68,96.93,129.08,125.08,107.14,142.60]
+    
+    zona_seguridad = [41,23,66,76,55,36,41,21,26,47,45,62,35,49,8,31,18,29,83,6,
+    27,47,50,96,138,95,48,40,27,41,35,40,28,21,53,35,18,18,50,34,5,16,22,18,
+    40,39,47,43,19,37,41,38]
+    
+    zona_alerta = [54,27,120,200,83,58,89,25,30,63,62,102,51,74,9,41,21,36,147,7,
+    33,62,69,143,259,150,60,47,31,54,48,61,35,25,82,44,21,20,68,42,5,17,26,20,
+    52,51,63,63,21,49,56,48]
+    
+    # --- Pestaña Canal Endémico ---
+    st.title("Canal Endémico IVRS - Área de Salud Bagaces 2026")
+    
+   
+   
+    st.header("Canal Endémico IVRS")
+    file_xlsx = st.file_uploader("Cargar archivo VE02 .xlsx", type=["xlsx"])
+
+    semanas = list(range(1, len(zona_exito)+1))
+    media  = [e+s for e,s in zip(zona_exito, zona_seguridad)]
+    ic_sup = [m+a for m,a in zip(media, zona_alerta)]
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=semanas,y=zona_exito,fill="tozeroy",
+                             fillcolor="rgba(0,180,0,0.95)",line=dict(width=0),
+                             name="Éxito"))
+    fig.add_trace(go.Scatter(x=semanas,y=media,fill="tonexty",
+                             fillcolor="rgba(255,200,0,0.95)",line=dict(width=0),
+                             name="Seguridad"))
+    fig.add_trace(go.Scatter(x=semanas,y=ic_sup,fill="tonexty",
+                             fillcolor="rgba(220,0,0,0.95)",line=dict(width=0),
+                             name="Alerta"))
+
+    if file_xlsx:
+        df = pd.read_excel(file_xlsx)
+        df = df[df["Evento"].str.contains("IVRS", case=False)]
+        tot = df.groupby("Semana_Epi")["COL_Total"].sum()
+        lista = [None]*len(semanas)
+        for wk, val in tot.items():
+            if 1 <= wk <= len(semanas):
+                lista[int(wk)-1] = int(val)
+        fig.add_trace(go.Scatter(x=semanas,y=lista,
+                                 mode="lines+markers",
+                                 line=dict(color="black",width=2),
+                                 name="Año en curso"))
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
+
