@@ -256,6 +256,57 @@ with tab3:
                              fillcolor="rgba(220,0,0,0.95)",line=dict(width=0),
                              name="Alerta"))
 
+    # 1) Filtra Evento = IVRS
+    df = df[df["DescripcionEvento"].astype(str).str.contains(r"\bIVRS\b", case=False, na=False)].copy()
+
+    masc = {
+        "<1": "COL_Masc_Menos_1_ANO",
+        "1-4": "COL_Masc_De_1_4_ANO",
+        "5-19": ["COL_Masc_De_5_9_ANO", "COL_Masc_De_10_14_ANO", "COL_Masc_De_15_19_ANO"],
+        "20-39": ["COL_Masc_De_20_24_ANO", "COL_Masc_De_25_29_ANO", "COL_Masc_De_30_34_ANO",
+                  "COL_Masc_De_35_39_ANO"],
+        "40-64": ["COL_Masc_De_40_44_ANO", "COL_Masc_De_45_49_ANO", "COL_Masc_De_50_54_ANO",
+                  "COL_Masc_De_55_59_ANO", "COL_Masc_De_60_64_ANO"],
+        "65+": "COL_Masc_65_y_mas",
+    }
+
+    fem = {
+        "<1": "COL_Fem_Menos_1_ANO",
+        "1-4": "COL_Fem_De_1_4_ANO",
+        "5-19": ["COL_Fem_De_5_9_ANO", "COL_Fem_De_10_14_ANO", "COL_Fem_De_15_19_ANO"],
+        "20-39": ["COL_Fem_De_20_24_ANO", "COL_Fem_De_25_29_ANO", "COL_Fem_De_30_34_ANO", "COL_Fem_De_35_39_ANO"],
+        "40-64": ["COL_Fem_De_40_44_ANO", "COL_Fem_De_45_49_ANO", "COL_Fem_De_50_54_ANO", "COL_Fem_De_55_59_ANO",
+                  "COL_Fem_De_60_64_ANO"],
+        "65+": "COL_Fem_65_y_mas",
+    }
+
+    # 3) columnas necesarias
+    needed_cols = []
+    for d in (masc, fem):
+        for v in d.values():
+            needed_cols += v if isinstance(v, list) else [v]
+
+    needed_cols = [c for c in needed_cols if c in df.columns]
+
+    if needed_cols:
+        df[needed_cols] = df[needed_cols].apply(pd.to_numeric, errors="coerce").fillna(0)
+
+    def sum_cols(spec):
+        if isinstance(spec, list):
+            cols = [c for c in spec if c in df.columns]
+            return df[cols].sum(axis=1) if cols else 0
+        return df[spec] if spec in df.columns else 0
+
+    # 4) grupos (Masc + Fem)
+    df["<1"] = sum_cols(masc["<1"]) + sum_cols(fem["<1"])
+    df["1-4"] = sum_cols(masc["1-4"]) + sum_cols(fem["1-4"])
+    df["5-19"] = sum_cols(masc["5-19"]) + sum_cols(fem["5-19"])
+    df["20-39"] = sum_cols(masc["20-39"]) + sum_cols(fem["20-39"])
+    df["40-64"] = sum_cols(masc["40-64"]) + sum_cols(fem["40-64"])
+    df["65+"] = sum_cols(masc["65+"]) + sum_cols(fem["65+"])
+
+    df["Total"] = df[["<1", "1-4", "5-19", "20-39", "40-64", "65+"]].sum(axis=1)
+
     if file_xlsx:
         df = pd.read_excel(file_xlsx)
         df = df[df["Evento"].str.contains("IVRS", case=False)]
