@@ -245,6 +245,7 @@ with tab3:
     
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
+    df = pd.read_excel(file_xlsx)
     if 'CentroSalud' in df.columns:
         df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
 
