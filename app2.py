@@ -317,7 +317,7 @@ if file_xlsx is not None:
 
     #if file_xlsx:
         #df = pd.read_excel(file_xlsx)
-    df = df[df["Evento"].str.contains("IVRS", case=False)]
+    df = df[df["DescripcionEvento"].str.contains("IVRS", case=False)]
     tot = df.groupby("SemEpi")["Total"].sum()
     lista = [None]*len(semanas)
     for wk, val in tot.items():
