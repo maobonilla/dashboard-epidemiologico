@@ -350,10 +350,10 @@ if file_xlsx is not None:
     # --- Pestaña Canal Endémico ---
     st.title("Canal Endémico Diarrea - Área de Salud Bagaces 2026")
       
-    st.header("Canal Endémico IVRS")
-    file_xlsx = st.file_uploader("Cargar archivo VE02 .xlsx", type=["xlsx"])
+    st.header("Canal Endémico DIARREA")
+    #file_xlsx = st.file_uploader("Cargar archivo VE02 .xlsx", type=["xlsx"])
     # 2. Carga del archivo XLSX
-if file_xlsx is not None:
+#if file_xlsx is not None:
     # Leer el archivo
     df = pd.read_excel(file_xlsx)
     
