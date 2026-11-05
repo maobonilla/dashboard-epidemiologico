@@ -239,15 +239,15 @@ with tab3:
     st.header("Canal Endémico IVRS")
     file_xlsx = st.file_uploader("Cargar archivo VE02 .xlsx", type=["xlsx"])
     # 2. Carga del archivo XLSX
-    if file_xlsx is not None:
-        # Leer el archivo
-        df = pd.read_excel(file_xlsx)
+if file_xlsx is not None:
+    # Leer el archivo
+    df = pd.read_excel(file_xlsx)
     
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
-    df = pd.read_excel(file_xlsx)
-    if 'CentroSalud' in df.columns:
-        df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
+    
+if 'CentroSalud' in df.columns:
+    df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
 
     semanas = list(range(1, len(zona_exito)+1))
     media  = [e+s for e,s in zip(zona_exito, zona_seguridad)]
