@@ -315,18 +315,18 @@ if file_xlsx is not None:
 
     df["Total"] = df[["<1", "1-4", "5-19", "20-39", "40-64", "65+"]].sum(axis=1)
 
-    if file_xlsx:
-        df = pd.read_excel(file_xlsx)
-        df = df[df["Evento"].str.contains("IVRS", case=False)]
-        tot = df.groupby("SemEpi")["Total"].sum()
-        lista = [None]*len(semanas)
-        for wk, val in tot.items():
-            if 1 <= wk <= len(semanas):
-                lista[int(wk)-1] = int(val)
-        fig.add_trace(go.Scatter(x=semanas,y=lista,
-                                 mode="lines+markers",
-                                 line=dict(color="black",width=2),
-                                 name="Año en curso"))
+    #if file_xlsx:
+        #df = pd.read_excel(file_xlsx)
+    df = df[df["Evento"].str.contains("IVRS", case=False)]
+    tot = df.groupby("SemEpi")["Total"].sum()
+    lista = [None]*len(semanas)
+    for wk, val in tot.items():
+        if 1 <= wk <= len(semanas):
+            lista[int(wk)-1] = int(val)
+    fig.add_trace(go.Scatter(x=semanas,y=lista,
+                             mode="lines+markers",
+                             line=dict(color="black",width=2),
+                             name="Año en curso"))
 
     st.plotly_chart(fig, use_container_width=True)
 
