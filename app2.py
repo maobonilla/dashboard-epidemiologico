@@ -246,8 +246,8 @@ if file_xlsx is not None:
     # 3. Limpieza y preparación de datos
     # Llenar espacios en blanco en la columna CentroSalud
     
-if 'CentroSalud' in df.columns:
-    df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
+    if 'CentroSalud' in df.columns:
+        df['CentroSalud'] = df['CentroSalud'].fillna('EBAIS BAGACES 3')
 
     semanas = list(range(1, len(zona_exito)+1))
     media  = [e+s for e,s in zip(zona_exito, zona_seguridad)]
