@@ -15,6 +15,19 @@ def semana_epidemiologica(fecha):
 
     return ((fecha - primer_domingo).days // 7) + 1
 
+def semana_epidemiologica(fecha):
+
+    if pd.isna(fecha):
+        return None
+
+    anio = fecha.year
+
+    primer_dia = pd.Timestamp(anio, 1, 1)
+
+    dias_hasta_domingo = (6 - primer_dia.weekday()) % 7
+    primer_domingo = primer_dia + pd.Timedelta(days=dias_hasta_domingo)
+
+    return ((fecha - primer_domingo).days // 7) + 1
 
 
 tab1, tab2, tab3 = st.tabs(["Informe VE01", "Canal Endémico", "Canal Endémico IVRS"])
