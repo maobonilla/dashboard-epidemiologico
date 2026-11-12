@@ -6,6 +6,17 @@ import openpyxl
 import datetime as dt 
 import io
 
+from datetime import date, timedelta
+
+def semana_epidemiologica(fecha):
+    anio = fecha.year
+    primer_dia = date(anio, 1, 1)
+    primer_domingo = primer_dia + timedelta(days=(6 - primer_dia.weekday()) % 7)
+
+    return ((fecha - primer_domingo).days // 7) + 1
+
+
+
 tab1, tab2, tab3 = st.tabs(["Informe VE01", "Canal Endémico", "Canal Endémico IVRS"])
 with tab1:        
     # 1. Configuración principal de la página
@@ -68,7 +79,8 @@ if archivo_cargado is not None:
         df_filtrado['FechaDiagnostico'] = pd.to_datetime(df_filtrado['FechaDiagnostico'], errors='coerce')
         
         # Crear columna de semana epidemiológica
-        df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
+        #df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
+        df_filtrado['SemanaEpi'] = semana_epidemiologica(df_filtrado['FechaDiagnostico'])
         df_filtrado['Año'] = df_filtrado['FechaDiagnostico'].dt.year
         
         # Agrupar por año y semana, sumar casos
