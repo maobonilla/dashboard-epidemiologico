@@ -5,15 +5,9 @@ import plotly.graph_objects as go
 import openpyxl
 import datetime as dt 
 import io
-
 from datetime import date, timedelta
 
-def semana_epidemiologica(fecha):
-    anio = fecha.year
-    primer_dia = date(anio, 1, 1)
-    primer_domingo = primer_dia + timedelta(days=(6 - primer_dia.weekday()) % 7)
 
-    return ((fecha - primer_domingo).days // 7) + 1
 
 def semana_epidemiologica(fecha):
 
@@ -89,12 +83,11 @@ if archivo_cargado is not None:
     
         st.subheader("Curva Epidemiológica (por Semana)")
     
-        df_filtrado['FechaDiagnostico'] = pd.to_datetime(df_filtrado['FechaDiagnostico'], errors='coerce')
+        df_filtrado['FechaDiagnostico'] = pd.to_datetime(df_filtrado['FechaInicioSintomas'], errors='coerce')
         
         # Crear columna de semana epidemiológica
-        #df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
-        df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].apply(semana_epidemiologica)
-        df_filtrado['Año'] = df_filtrado['FechaDiagnostico'].dt.year
+        df_filtrado['SemanaEpi'] = df_filtrado['FechaInicioSintomas'].apply(semana_epidemiologica)
+        df_filtrado['Año'] = df_filtrado['FechaInicioSintomas'].dt.year
         
         # Agrupar por año y semana, sumar casos
         curva_df = df_filtrado.groupby(['Año','SemanaEpi'])['VALOR'].sum().reset_index()
