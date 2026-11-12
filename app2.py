@@ -80,7 +80,7 @@ if archivo_cargado is not None:
         
         # Crear columna de semana epidemiológica
         #df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].dt.isocalendar().week
-        df_filtrado['SemanaEpi'] = semana_epidemiologica(df_filtrado['FechaDiagnostico'])
+        df_filtrado['SemanaEpi'] = df_filtrado['FechaDiagnostico'].apply(semana_epidemiologica)
         df_filtrado['Año'] = df_filtrado['FechaDiagnostico'].dt.year
         
         # Agrupar por año y semana, sumar casos
